@@ -1,0 +1,130 @@
+﻿<project>
+    <Metadata>
+        <metadata>
+            <PackageName>Advanced Scheduled Publishing</PackageName>
+            <Author>Aceik Pty Ltd</Author>
+            <Version>1.0</Version>
+            <Revision />
+            <License />
+            <Comment />
+            <Attributes />
+            <Readme>
+				This package will install the following templates:
+				/sitecore/templates/Foundation/Advanced Scheduled Publishing/Publishing Schedule
+				/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options
+
+				and the command:
+				/sitecore/system/Tasks/Commands/Scheduled Publish/Scheduled Publish
+
+				To setup Advanced Scheduled Publishing, follow these steps:
+				1) Create a new item using the "Scheduled Publishing Options" template.
+				2) Choose EnablePublishingInterval or EnablePublishingSchedule (or both)
+				For Interval publishing, enter the PublishingInterval in minutes and the start and end interval times (as HHmm)
+				For Schedule Publishing, create an item using the "Publishing Schedule" template and enter the publishing time (as HHmm), then add that item to the PublishingSchedules.
+				3) Create a Schedule item under /sitecore/system/Tasks/Schedules/.
+				Set its Command to be /sitecore/system/Tasks/Commands/Scheduled Publish/Scheduled Publish
+				In the Items field, enter the ID of the item created in step 1
+				In the Schedule field, enter a pipe-delimited value in the format StartDate|FinishDate|DaysBits|Interval
+				An example is 20131231T130000|20981231T130000|127|00:10:00, which runs every 10 minutes, every day between 31 Dec 2013 and 31 Dec 2098
+
+				When the Advanced Scheduled Publishing is being used, the Sitecore Publish Agent should be disabled by setting the interval to 00:00:00 as follows:
+				&lt;agent type="Sitecore.Tasks.PublishAgent" method="Run" interval="00:00:00"&gt;
+            </Readme>
+            <Publisher />
+            <PostStep />
+            <PackageID />
+        </metadata>
+    </Metadata>
+    <SaveProject>True</SaveProject>
+    <Sources>
+        <xfiles>
+            <Entries>
+                <x-item>/bin/Sitecore.Foundation.AdvancedScheduledPublishing.dll</x-item>
+            </Entries>
+            <Converter>
+                <FileToEntryConverter>
+                    <Root>/</Root>
+                    <Transforms>
+                        <InstallerConfigurationTransform>
+                            <Options>
+                                <BehaviourOptions>
+                                    <ItemMode>Undefined</ItemMode>
+                                    <ItemMergeMode>Undefined</ItemMergeMode>
+                                </BehaviourOptions>
+                            </Options>
+                        </InstallerConfigurationTransform>
+                    </Transforms>
+                </FileToEntryConverter>
+            </Converter>
+            <Include />
+            <Exclude />
+            <Name>Bin</Name>
+        </xfiles>
+        <xitems>
+            <Entries>
+                <x-item>/master/sitecore/templates/Foundation/{6C1BE0DC-C0AE-425D-8EDC-C71019DB2F84}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/{6BD4DD6C-13B8-4402-87AA-2556B1FE7228}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Publishing Schedule/{4962D859-ACEA-4A0E-BBD1-25A60442FEC0}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Publishing Schedule/Publishing Schedule/{37DCAC05-EC78-4E1B-BB3B-2ED75B4B9B48}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Publishing Schedule/Publishing Schedule/PublishTime/{9335971E-C484-4DE4-8295-23DBBD7EBB0A}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/{7F00AFAD-DB85-45A7-88AB-E980322379F6}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Log/{3216F371-8574-4EBF-AA36-0A51AFD86116}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Log/LastPublishing/{330022CB-98F4-4E79-B175-45AB77B7B7BC}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Interval/{85E9744D-49E3-48F1-8255-4FA132199CAE}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Interval/EnablePublishingInterval/{4E61D78C-370A-42B0-8535-F23F1787BD0C}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Interval/EndIntervalTime/{3D02258C-A0FC-48CA-A2BA-59D0CA866072}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Interval/PublishingInterval/{C57D6D82-6AF8-4215-9BFE-9CF6DAE369BE}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Interval/StartIntervalTime/{30E66C0D-FF63-4794-B49C-AF24A98A073C}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Schedule/{F601C0D2-1232-4997-95BA-65C6500E9E58}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Schedule/EnablePublishingSchedule/{D0D3AD91-7110-4B14-84A9-8E3FF0BEC825}/invariant/0</x-item>
+                <x-item>/master/sitecore/templates/Foundation/Advanced Scheduled Publishing/Scheduled Publishing Options/Publishing Schedule/PublishingSchedules/{2521E05C-3117-49A1-8EF5-5AC36C2A03D1}/invariant/0</x-item>
+            </Entries>
+            <SkipVersions>False</SkipVersions>
+            <Converter>
+                <ItemToEntryConverter>
+                    <Transforms>
+                        <InstallerConfigurationTransform>
+                            <Options>
+                                <BehaviourOptions>
+                                    <ItemMode>Undefined</ItemMode>
+                                    <ItemMergeMode>Undefined</ItemMergeMode>
+                                </BehaviourOptions>
+                            </Options>
+                        </InstallerConfigurationTransform>
+                    </Transforms>
+                </ItemToEntryConverter>
+            </Converter>
+            <Include />
+            <Exclude />
+            <Name>Templates</Name>
+        </xitems>
+        <xitems>
+            <Entries>
+                <x-item>/master/sitecore/system/Tasks/Commands/Scheduled Publish/{79F80E7D-5F21-42F9-A5E0-77121AB910A3}/invariant/0</x-item>
+            </Entries>
+            <SkipVersions>False</SkipVersions>
+            <Converter>
+                <ItemToEntryConverter>
+                    <Transforms />
+                </ItemToEntryConverter>
+            </Converter>
+            <Include />
+            <Exclude />
+            <Name>Tasks</Name>
+        </xitems>
+    </Sources>
+    <Converter>
+        <TrivialConverter>
+            <Transforms />
+        </TrivialConverter>
+    </Converter>
+    <Include />
+    <Exclude />
+    <Name />
+</project>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,400italic,600italic,700italic,300,600,700,800" rel="stylesheet" />
+
+<link href="/sitecore/shell/themes/standard/default/Default.css" rel="stylesheet" />
+
+<link href="/sitecore/shell/controls/Lib/Flexie/flex.css" rel="stylesheet" />
+

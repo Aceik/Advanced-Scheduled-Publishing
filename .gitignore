@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.suo
+/packages
+/src/Foundation/AdvancedScheduledPublishing/code/bin
+/src/Foundation/AdvancedScheduledPublishing/code/obj/Debug
+/src/Foundation/AdvancedScheduledPublishing/code/Properties/PublishProfiles/local.pubxml.user
+/src/Foundation/AdvancedScheduledPublishing/code/Sitecore.Foundation.AdvancedScheduledPublishing.csproj.user
+/src/Foundation/AdvancedScheduledPublishing/code/Properties/PublishProfiles/local.pubxml
+/Aceik.Advanced.Scheduled.Publishing.sln.DotSettings.user

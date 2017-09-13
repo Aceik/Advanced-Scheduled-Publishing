@@ -1,0 +1,25 @@
+﻿---
+ID: "79f80e7d-5f21-42f9-a5e0-77121ab910a3"
+Parent: "3be62c0d-e980-48a5-9738-a9dafd821f8a"
+Template: "58119a3e-560e-4da6-97c6-1ace8a5b1219"
+Path: /sitecore/system/Tasks/Commands/Scheduled Publish/Scheduled Publish
+DB: master
+SharedFields:
+- ID: "4bc75539-d5c4-487b-af35-ff13d62bd286"
+  Hint: Method
+  Value: Run
+- ID: "752579a7-ef2f-45b7-b9d1-9b682308b7a5"
+  Hint: Type
+  Value: Sitecore.Foundation.AdvancedScheduledPublishing.ScheduledPublishing,Sitecore.Foundation.AdvancedScheduledPublishing
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20170912T233546Z
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\admin
