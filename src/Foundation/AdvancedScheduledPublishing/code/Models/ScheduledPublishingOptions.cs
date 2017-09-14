@@ -12,7 +12,7 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing.Models
         public DateTime EndIntervalTime { get; set; }
         public bool EnablePublishingSchedule { get; set; }
         public List<PublishingSchedule> PublishingSchedules { get; set; }
-        public DateTime LastPublishing { get; set; }
+        public DateTime? LastPublishing { get; set; }
         public Item SitecoreItem { get; set; }
     }
 }

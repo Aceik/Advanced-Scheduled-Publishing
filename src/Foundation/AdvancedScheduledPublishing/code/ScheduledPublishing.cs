@@ -81,7 +81,15 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
                     CultureInfo.InvariantCulture);
 
                 options.PublishingInterval = TimeSpan.FromMinutes(int.Parse(scheduledPublishingOptionsItem.Fields[PublishingInterval].Value));
-                options.LastPublishing = DateUtil.ParseDateTime(scheduledPublishingOptionsItem.Fields[LastPublishing].Value, DateTime.Now);
+                DateTime lastPublishing;
+                if (DateTime.TryParse(scheduledPublishingOptionsItem.Fields[LastPublishing].Value, out lastPublishing))
+                {
+                    options.LastPublishing = lastPublishing;
+                }
+                else
+                {
+                    options.LastPublishing = null;
+                }
                 options.PublishingSchedules = new List<PublishingSchedule>();
 
                 if (!string.IsNullOrEmpty(scheduledPublishingOptionsItem.Fields[PublishingSchedules].Value))
@@ -238,7 +246,7 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
 
         private static bool IsValidIntervalTime(DateTime now, ScheduledPublishingOptions options)
         {
-            return now - options.LastPublishing > options.PublishingInterval;
+            return options.LastPublishing == null || now - options.LastPublishing > options.PublishingInterval;
         }
 
         private static bool IsValidPublishingSchedule(ScheduledPublishingOptions options)
