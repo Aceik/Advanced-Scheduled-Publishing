@@ -81,15 +81,9 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
                     CultureInfo.InvariantCulture);
 
                 options.PublishingInterval = TimeSpan.FromMinutes(int.Parse(scheduledPublishingOptionsItem.Fields[PublishingInterval].Value));
-                DateTime lastPublishing;
-                if (DateTime.TryParse(scheduledPublishingOptionsItem.Fields[LastPublishing].Value, out lastPublishing))
-                {
-                    options.LastPublishing = lastPublishing;
-                }
-                else
-                {
-                    options.LastPublishing = null;
-                }
+                options.LastPublishing = string.IsNullOrWhiteSpace(scheduledPublishingOptionsItem.Fields[LastPublishing].Value) ? null :
+                    (DateTime?)(DateUtil.ParseDateTime(scheduledPublishingOptionsItem.Fields[LastPublishing].Value, DateTime.Now));
+
                 options.PublishingSchedules = new List<PublishingSchedule>();
 
                 if (!string.IsNullOrEmpty(scheduledPublishingOptionsItem.Fields[PublishingSchedules].Value))
