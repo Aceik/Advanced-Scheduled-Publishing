@@ -46,13 +46,18 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
 
             Log.Info("Running Scheduled Publishing Task", this);
 
-            var options = InitialiseSchedulingOptions(itemArray[0]);
+            foreach (var item in itemArray)
+            {
+                var options = InitialiseSchedulingOptions(item);
 
-            if (!IsValidOptions(options)) return;
+                if (!IsValidOptions(options)) continue;
 
-            var now = DateTime.Now;
-            RunPublishingInterval(now, options);
-            RunPublishingSchedule(now, options);
+                var now = DateTime.Now;
+                RunPublishingInterval(now, options);
+                RunPublishingSchedule(now, options);
+            }
+
+           
         }
 
         private ScheduledPublishingOptions InitialiseSchedulingOptions(Item scheduledPublishingOptionsItem)
@@ -136,9 +141,11 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
         {
             if (IsValidPublishingInterval(now, options))
             {
+                Log.Debug($"Interval publishing is valid for {options.SitecoreItem.ID} - {options.SitecoreItem.Paths.Path}", this);
                 if (IsValidIntervalTime(now, options))
                 {
-                    Publish();
+                    Log.Debug($"Interval time is valid for {options.SitecoreItem.ID} - {options.SitecoreItem.Paths.Path}", this);
+                    Publish(options.SitecoreItem);
                     UpdateLastPublishingDate(options.SitecoreItem, now);
                 }
                 else
@@ -156,11 +163,13 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
         {
             if (IsValidPublishingSchedule(options))
             {
+                Log.Debug($"Scheduled publishing is valid for {options.SitecoreItem.ID} - {options.SitecoreItem.Paths.Path}", this);
                 foreach (var publishingSchedule in options.PublishingSchedules)
                 {
                     if (IsValidScheduleTime(now, publishingSchedule.PublishTime))
                     {
-                        Publish();
+                        Log.Debug($"Scheduled publishing time is valid for {options.SitecoreItem.ID} - {options.SitecoreItem.Paths.Path}", this);
+                        Publish(options.SitecoreItem);
                         UpdateLastPublishingDate(options.SitecoreItem, now);
                     }
                     else
@@ -176,11 +185,11 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             }
         }
 
-        private void Publish()
+        private void Publish(Item itemToPublish)
         {
+            Log.Info($"Publishing {itemToPublish.ID} - {itemToPublish.Paths.Path}", this);
             var db = Factory.GetDatabase(MasterDatabaseName);
-            var rootNode = db.GetItem(RootNode);
-
+            
             Language[] languages = { Language.Current };
 
             var publishTarget = db.GetItem(PublishingTargetsPath);
@@ -209,7 +218,7 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
                 try
                 {
                     var dbs = dbsList.ToArray();
-                    PublishManager.PublishSmart(rootNode.Database, dbs, languages);
+                    PublishManager.PublishSmart(itemToPublish.Database, dbs, languages);
                 }
                 catch (Exception ex)
                 {
