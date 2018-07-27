@@ -1,0 +1,58 @@
+<project>
+  <Metadata>
+    <metadata>
+      <PackageName>Advanced Scheduled Publishing</PackageName>
+      <Author />
+      <Version>2.0</Version>
+      <Revision />
+      <License />
+      <Comment />
+      <Attributes />
+      <Readme />
+      <Publisher />
+      <PostStep />
+      <PackageID />
+    </metadata>
+  </Metadata>
+  <SaveProject>True</SaveProject>
+  <Sources>
+    <xitems>
+      <Entries>
+        <x-item>/master/sitecore/system/Tasks/Commands/Scheduled Publish/{98BA00A0-DB5F-414E-9EE2-29DA3C18531B}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Tasks/Commands/Scheduled Publish/Scheduled Publish/{8EB1859C-4439-4AA2-9B62-19B2B917BE53}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/{6BD4DD6C-13B8-4402-87AA-2556B1FE7228}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/{7F00AFAD-DB85-45A7-88AB-E980322379F6}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Interval Publishing/{85E9744D-49E3-48F1-8255-4FA132199CAE}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Interval Publishing/EnablePublishingInterval/{4E61D78C-370A-42B0-8535-F23F1787BD0C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Interval Publishing/EndIntervalTime/{3D02258C-A0FC-48CA-A2BA-59D0CA866072}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Interval Publishing/IntervalPublishingItems/{5DFFFC21-73E6-4C42-9ACC-E03F5D345128}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Interval Publishing/PublishingInterval/{C57D6D82-6AF8-4215-9BFE-9CF6DAE369BE}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Interval Publishing/StartIntervalTime/{30E66C0D-FF63-4794-B49C-AF24A98A073C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Log/{3216F371-8574-4EBF-AA36-0A51AFD86116}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Log/LastIntervalPublishing/{3C15CCFD-9440-4177-952F-C7494B1E82CC}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Log/LastScheduledPublishing/{330022CB-98F4-4E79-B175-45AB77B7B7BC}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Scheduled Publishing/{F601C0D2-1232-4997-95BA-65C6500E9E58}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Scheduled Publishing/EnablePublishingSchedule/{D0D3AD91-7110-4B14-84A9-8E3FF0BEC825}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Scheduled Publishing/ScheduledPublishingItems/{2521E05C-3117-49A1-8EF5-5AC36C2A03D1}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Foundation/AdvancedScheduledPublishing/Publishing Options/Scheduled Publishing/ScheduledPublishTime/{9335971E-C484-4DE4-8295-23DBBD7EBB0A}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms />
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Template and Command</Name>
+    </xitems>
+  </Sources>
+  <Converter>
+    <TrivialConverter>
+      <Transforms />
+    </TrivialConverter>
+  </Converter>
+  <Include />
+  <Exclude />
+  <Name />
+</project>

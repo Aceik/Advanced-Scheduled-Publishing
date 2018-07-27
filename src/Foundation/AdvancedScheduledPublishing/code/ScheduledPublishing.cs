@@ -28,14 +28,16 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
 
         //Field Names
         private const string EnablePublishingInterval = "EnablePublishingInterval";
-
         private const string PublishingInterval = "PublishingInterval";
         private const string StartIntervalTime = "StartIntervalTime";
         private const string EndIntervalTime = "EndIntervalTime";
+        private const string IntervalPublishingItems = "IntervalPublishingItems";
+        private const string LastIntervalPublishing = "LastIntervalPublishing";
+
         private const string EnablePublishingSchedule = "EnablePublishingSchedule";
-        private const string PublishingSchedules = "PublishingSchedules";
-        private const string LastPublishing = "LastPublishing";
-        private const string PublishTime = "PublishTime";
+        private const string ScheduledPublishingItems = "ScheduledPublishingItems";
+        private const string LastScheduledPublishing = "LastScheduledPublishing";
+        private const string ScheduledPublishTime = "ScheduledPublishTime";
 
         #endregion Constants
 
@@ -43,7 +45,6 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
 
         public void Run(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
-
             Log.Info("Running Scheduled Publishing Task", this);
 
             var options = InitialiseSchedulingOptions(itemArray[0]);
@@ -55,55 +56,93 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             RunPublishingSchedule(now, options);
         }
 
-        private ScheduledPublishingOptions InitialiseSchedulingOptions(Item scheduledPublishingOptionsItem)
+        private PublishingOptions InitialiseSchedulingOptions(Item publishingOptionsItem)
         {
-            if (scheduledPublishingOptionsItem == null)
+            if (publishingOptionsItem == null)
             {
                 return null;
             }
 
-            var options = new ScheduledPublishingOptions();
+            var options = new PublishingOptions();
 
             try
             {
-                options.SitecoreItem = scheduledPublishingOptionsItem;
+                options.SitecoreItem = publishingOptionsItem;
 
-                options.EnablePublishingInterval = SetBoolFromCheckbox(scheduledPublishingOptionsItem.Fields[EnablePublishingInterval]);
-                options.EnablePublishingSchedule = SetBoolFromCheckbox(scheduledPublishingOptionsItem.Fields[EnablePublishingSchedule]);
+                // Interval Publishing
 
-                options.StartIntervalTime = DateTime.ParseExact(
-                    scheduledPublishingOptionsItem.Fields[StartIntervalTime].Value,
-                    PublishTimeFormat,
-                    CultureInfo.InvariantCulture);
-                options.EndIntervalTime = DateTime.ParseExact(
-                    scheduledPublishingOptionsItem.Fields[EndIntervalTime].Value,
-                    PublishTimeFormat,
-                    CultureInfo.InvariantCulture);
+                options.IntervalPublishingOptions = new IntervalPublishingOptions
+                {
+                    EnablePublishingInterval =
+                        SetBoolFromCheckbox(publishingOptionsItem.Fields[EnablePublishingInterval]),
 
-                options.PublishingInterval = TimeSpan.FromMinutes(int.Parse(scheduledPublishingOptionsItem.Fields[PublishingInterval].Value));
-                options.LastPublishing = string.IsNullOrWhiteSpace(scheduledPublishingOptionsItem.Fields[LastPublishing].Value) ? null :
-                    (DateTime?)(DateUtil.ParseDateTime(scheduledPublishingOptionsItem.Fields[LastPublishing].Value, DateTime.Now));
+                    LastPublishing =
+                        string.IsNullOrWhiteSpace(publishingOptionsItem.Fields[LastIntervalPublishing].Value)
+                            ? null
+                            : (DateTime?) DateUtil.ParseDateTime(publishingOptionsItem.Fields[LastIntervalPublishing].Value, DateTime.Now),
 
-                options.PublishingSchedules = new List<PublishingSchedule>();
+                    StartIntervalTime =
+                        publishingOptionsItem.Fields[StartIntervalTime].HasValue
+                        ?
+                        DateTime.ParseExact(
+                        publishingOptionsItem.Fields[StartIntervalTime].Value,
+                        PublishTimeFormat,
+                        CultureInfo.InvariantCulture)
+                        : DateTime.MinValue,
 
-                if (!string.IsNullOrEmpty(scheduledPublishingOptionsItem.Fields[PublishingSchedules].Value))
+                    EndIntervalTime =
+                        publishingOptionsItem.Fields[EndIntervalTime].HasValue
+                        ?
+                        DateTime.ParseExact(
+                        publishingOptionsItem.Fields[EndIntervalTime].Value,
+                        PublishTimeFormat,
+                        CultureInfo.InvariantCulture)
+                        : DateTime.MinValue,
+
+                    PublishingInterval = publishingOptionsItem.Fields[PublishingInterval].HasValue
+                        ? TimeSpan.FromMinutes(int.Parse(publishingOptionsItem.Fields[PublishingInterval].Value))
+                        : TimeSpan.Zero
+                };
+
+                if (!string.IsNullOrEmpty(publishingOptionsItem.Fields[IntervalPublishingItems].Value))
                 {
                     var db = Factory.GetDatabase(MasterDatabaseName);
-                    var publishScheduleItemIds = scheduledPublishingOptionsItem.Fields[PublishingSchedules].Value.Split('|');
-
+                    var publishScheduleItemIds = publishingOptionsItem.Fields[IntervalPublishingItems].Value.Split('|');
+                    
                     foreach (var id in publishScheduleItemIds)
                     {
-                        var publishingScheduleItem = db.GetItem(id);
+                        var item = db.GetItem(id);
 
-                        if (publishingScheduleItem == null) continue;
-                        var publishingSchedule = new PublishingSchedule
-                        {
-                            PublishTime = DateTime.ParseExact(
-                                publishingScheduleItem.Fields[PublishTime].Value,
-                                PublishTimeFormat,
-                                CultureInfo.InvariantCulture)
-                        };
-                        options.PublishingSchedules.Add(publishingSchedule);
+                        if (item == null) continue;
+                        options.IntervalPublishingOptions.Items.Add(item);
+                    }
+                }
+
+
+                // Scheduled Publishing
+
+                options.ScheduledPublishingOptions = new ScheduledPublishingOptions
+                {
+                    EnablePublishingSchedule =
+                        SetBoolFromCheckbox(publishingOptionsItem.Fields[EnablePublishingSchedule]),
+                    LastPublishing = string.IsNullOrWhiteSpace(publishingOptionsItem.Fields[LastScheduledPublishing].Value)
+                        ? null
+                        : (DateTime?)(DateUtil.ParseDateTime(publishingOptionsItem.Fields[LastScheduledPublishing].Value, DateTime.Now)),
+                    PublishTime = publishingOptionsItem.Fields[ScheduledPublishTime].HasValue
+                        ? DateTime.ParseExact(publishingOptionsItem.Fields[ScheduledPublishTime].Value, PublishTimeFormat, CultureInfo.InvariantCulture)
+                        : DateTime.MaxValue
+                };
+
+                if (!string.IsNullOrEmpty(publishingOptionsItem.Fields[ScheduledPublishingItems].Value))
+                {
+                    var db = Factory.GetDatabase(MasterDatabaseName);
+                    var publishScheduleItemIds = publishingOptionsItem.Fields[ScheduledPublishingItems].Value.Split('|');
+                    foreach (var id in publishScheduleItemIds)
+                    {
+                        var item = db.GetItem(id);
+
+                        if (item == null) continue;
+                        options.ScheduledPublishingOptions.Items.Add(item);
                     }
                 }
             }
@@ -115,12 +154,12 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             return options;
         }
 
-        private static void UpdateLastPublishingDate(Item item, DateTime lastPublishing)
+        private static void UpdateLastPublishingDate(Item item, string fieldName, DateTime lastPublishing)
         {
             using (new SecurityDisabler())
             {
                 item.Editing.BeginEdit();
-                item.Fields[LastPublishing].Value = DateUtil.ToIsoDate(lastPublishing);
+                item.Fields[fieldName].Value = DateUtil.ToIsoDate(lastPublishing);
                 item.Editing.EndEdit();
             }
         }
@@ -132,18 +171,21 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             return field.Value == CheckBoxTrueValue;
         }
 
-        private void RunPublishingInterval(DateTime now, ScheduledPublishingOptions options)
+        private void RunPublishingInterval(DateTime now, PublishingOptions options)
         {
-            if (IsValidPublishingInterval(now, options))
+            if (IsValidPublishingInterval(now, options.IntervalPublishingOptions))
             {
-                if (IsValidIntervalTime(now, options))
+                if (IsValidIntervalTime(now, options.IntervalPublishingOptions))
                 {
-                    Publish();
-                    UpdateLastPublishingDate(options.SitecoreItem, now);
+                    Log.Info("Running Interval Publishing for items:", this);
+                    options.IntervalPublishingOptions.Items.ForEach(x => Log.Info($"{x.Paths.Path}", this));
+
+                    Publish(options.IntervalPublishingOptions.Items);
+                    UpdateLastPublishingDate(options.SitecoreItem, LastIntervalPublishing, now);
                 }
                 else
                 {
-                    Log.Info($"Current time: {now} has not met the next interval time: {options.PublishingInterval}", this);
+                    Log.Info($"Current time: {now} has not met the next interval time: {options.IntervalPublishingOptions.PublishingInterval}", this);
                 }
             }
             else
@@ -152,22 +194,22 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             }
         }
 
-        private void RunPublishingSchedule(DateTime now, ScheduledPublishingOptions options)
+        private void RunPublishingSchedule(DateTime now, PublishingOptions options)
         {
-            if (IsValidPublishingSchedule(options))
+            if (IsValidPublishingSchedule(options.ScheduledPublishingOptions))
             {
-                foreach (var publishingSchedule in options.PublishingSchedules)
+                if (IsValidScheduleTime(now, options.ScheduledPublishingOptions.PublishTime))
                 {
-                    if (IsValidScheduleTime(now, publishingSchedule.PublishTime))
-                    {
-                        Publish();
-                        UpdateLastPublishingDate(options.SitecoreItem, now);
-                    }
-                    else
-                    {
-                        Log.Info(
-                            $"Current time: {now} has not met the next scheduled time: {publishingSchedule.PublishTime}", this);
-                    }
+                    Log.Info("Running Scheduled Publishing for items:", this);
+                    options.ScheduledPublishingOptions.Items.ForEach(x => Log.Info($"{x.Paths.Path}", this));
+
+                    Publish(options.IntervalPublishingOptions.Items);
+                    UpdateLastPublishingDate(options.SitecoreItem, LastScheduledPublishing, now);
+                }
+                else
+                {
+                    Log.Info(
+                        $"Current time: {now} has not met the next scheduled time: {options.ScheduledPublishingOptions.PublishTime}", this);
                 }
             }
             else
@@ -176,11 +218,10 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             }
         }
 
-        private void Publish()
+        private void Publish(List<Item> itemsToPublish)
         {
             var db = Factory.GetDatabase(MasterDatabaseName);
-            var rootNode = db.GetItem(RootNode);
-
+            
             Language[] languages = { Language.Current };
 
             var publishTarget = db.GetItem(PublishingTargetsPath);
@@ -209,7 +250,7 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
                 try
                 {
                     var dbs = dbsList.ToArray();
-                    PublishManager.PublishSmart(rootNode.Database, dbs, languages);
+                    itemsToPublish.ForEach(x => PublishManager.PublishSmart(x.Database, dbs, languages));
                 }
                 catch (Exception ex)
                 {
@@ -222,7 +263,7 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
 
         #region Validation
 
-        private bool IsValidOptions(ScheduledPublishingOptions options)
+        private bool IsValidOptions(PublishingOptions options)
         {
             if (options != null)
             {
@@ -233,19 +274,19 @@ namespace Sitecore.Foundation.AdvancedScheduledPublishing
             return false;
         }
 
-        private static bool IsValidPublishingInterval(DateTime dateTime, ScheduledPublishingOptions options)
+        private static bool IsValidPublishingInterval(DateTime dateTime, IntervalPublishingOptions options)
         {
             return options.EnablePublishingInterval && DateWithinDateRange(dateTime, options.StartIntervalTime, options.EndIntervalTime);
         }
 
-        private static bool IsValidIntervalTime(DateTime now, ScheduledPublishingOptions options)
+        private static bool IsValidIntervalTime(DateTime now, IntervalPublishingOptions options)
         {
             return options.LastPublishing == null || now - options.LastPublishing > options.PublishingInterval;
         }
 
         private static bool IsValidPublishingSchedule(ScheduledPublishingOptions options)
         {
-            return options.EnablePublishingSchedule && options.PublishingSchedules != null && options.PublishingSchedules.Any();
+            return options.EnablePublishingSchedule && options.Items != null && options.Items.Any();
         }
 
         private static bool IsValidScheduleTime(DateTime now, DateTime schduleDateTime)

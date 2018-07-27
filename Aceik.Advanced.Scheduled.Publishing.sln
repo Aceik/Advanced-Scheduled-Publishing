@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Foundation.AdvancedScheduledPublishing", "src\Foundation\AdvancedScheduledPublishing\code\Sitecore.Foundation.AdvancedScheduledPublishing.csproj", "{2E8EC502-2F50-45EF-B506-A4AB406C76A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sitecore Packages", "Sitecore Packages", "{8B96F27E-58C3-49D3-B34C-92223B528CBB}"
 	ProjectSection(SolutionItems) = preProject
 		Advanced Scheduled Publishing-1.0.zip = Advanced Scheduled Publishing-1.0.zip
+		Advanced Scheduled Publishing-2.0.xml = Advanced Scheduled Publishing-2.0.xml
+		Advanced Scheduled Publishing-2.0.zip = Advanced Scheduled Publishing-2.0.zip
 		Advanced Scheduled Publishing.xml = Advanced Scheduled Publishing.xml
 	EndProjectSection
 EndProject
